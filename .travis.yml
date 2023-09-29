@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.11"
+
+# Instalar Poetry
+before_install:
+  - pip install poetry
+
+# Instalar dependencias usando Poetry
+install:
+  - poetry install
+
+# Ejecutar pruebas
+script:
+  - poetry -v
