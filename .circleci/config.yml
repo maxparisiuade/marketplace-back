@@ -11,7 +11,8 @@ jobs:
           command: |
             curl -sSL https://install.python-poetry.org | python
             export PATH="$HOME/.local/bin:$PATH"
-            ls $HOME/
+            ls $HOME/repo/
+            ls $HOME/.local/
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pyproject.toml" }}
