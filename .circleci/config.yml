@@ -3,20 +3,28 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.9.7
+    working_directory: ~/repo
     steps:
       - checkout
       - run:
           name: Install Poetry
           command: |
-            curl -sSL https://install.python-poetry.org | python -
-            export PATH="$HOME/.poetry/bin:$PATH"
+            curl -sSL https://install.python-poetry.org | python
             source $HOME/.poetry/env
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pyproject.toml" }}
+            - v1-dependencies-
       - run:
-          name: Install Dependencies with Poetry
+          name: Install Dependencies
           command: |
             poetry install
+      - save_cache:
+          paths:
+            - ~/.cache/pypoetry/virtualenvs
+          key: v1-dependencies-{{ checksum "pyproject.toml" }}
       - run:
-          name: Run Tests with Poetry
+          name: Run Tests
           command: |
             source $HOME/.poetry/env
-            poetry run pytest test
+            poetry run pytest
