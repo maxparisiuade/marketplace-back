@@ -22,10 +22,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      - run:
-          name: Generate coverage report
-          command: |
-            poetry run coverage xml
       - store_artifacts:
           path: ~/project/coverage.xml
           destination: coverage/xml
