@@ -9,6 +9,7 @@ jobs:
           name: Install Poetry
           command: |
             curl -sSL https://install.python-poetry.org | python -
+            export PATH="$HOME/.poetry/bin:$PATH"
       - run:
           name: Install Dependencies with Poetry
           command: |
