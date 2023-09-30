@@ -1,0 +1,22 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: python:3.9
+    steps:
+      - checkout
+      - run:
+          name: Install Poetry
+          command: |
+            curl -sSL https://install.python-poetry.org | python -
+      - run:
+          name: Install Dependencies with Poetry
+          command: |
+            poetry install
+      - run:
+          name: Activate Venv
+          command: |
+            poetry shell
+      - run:
+          name: Run Tests
+          command: poetry run pytest test
