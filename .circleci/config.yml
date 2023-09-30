@@ -10,8 +10,8 @@ jobs:
           name: Install Poetry
           command: |
             curl -sSL https://install.python-poetry.org | python
-            export PATH="$HOME/.poetry/bin:$PATH"
-            source $HOME/.poetry/env
+            export PATH="$HOME/.local/bin:$PATH"
+            ls $HOME/
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pyproject.toml" }}
