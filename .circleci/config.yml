@@ -1,12 +1,14 @@
 version: 2.1
 orbs:
   python: circleci/python@2.1.1
+  sonarcloud: sonarsource/sonarcloud@2.0.0
 
 jobs:
   build_and_test: # this can be any name you choose
     executor: python/default
     steps:
       - checkout
+      - sonarcloud/scan
       - python/install-packages:
           pkg-manager: poetry
       - run:
@@ -42,6 +44,7 @@ workflows:
   test_my_app:
     jobs:
       - build_and_test
+        context: sonarcloud
       - coverage_report:
           requires:
             - build_and_test
