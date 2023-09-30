@@ -20,6 +20,17 @@ jobs:
           root: ~/project
           paths:
             - .
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Check coverage
+          command: |
+            poetry run coverage xml
+            coverage=$(poetry run coverage report --fail-under=100 | grep TOTAL | awk '{print $NF}')
+            if [ $(echo "$coverage < 100" | bc -l) -eq 1 ]; then
+              echo "Coverage is below 100% ($coverage%)"
+              exit 1
+            fi
     
   coverage_report:
     executor: python/default
