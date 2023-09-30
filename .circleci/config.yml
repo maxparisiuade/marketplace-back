@@ -1,31 +1,39 @@
 version: 2.1
+orbs:
+  python: circleci/python@2.0.3
 
 jobs:
-  build:
-    docker:
-      - image: circleci/python:3.9.7
-    working_directory: ~/repo
+  build_and_test: # this can be any name you choose
+    executor: python/default
     steps:
       - checkout
+      - python/install-packages:
+          pkg-manager: pip
       - run:
           name: Install Poetry
-          command: |
-            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-            source $HOME/.poetry/env
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pyproject.toml" }}
-            - v1-dependencies-
+          command: pip install poetry
       - run:
-          name: Install Dependencies
-          command: |
-            poetry install
-      - save_cache:
-          paths:
-            - ~/.cache/pypoetry/virtualenvs
-          key: v1-dependencies-{{ checksum "pyproject.toml" }}
+          name: Install dependencies
+          command: poetry install
       - run:
-          name: Run Tests
-          command: |
-            source $HOME/.poetry/env
-            poetry run pytest test
+          name: Run tests
+          command: poetry run pytest
+
+  # deploy: # this can be any name you choose
+  #   executor: python/default
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/project
+  #     - heroku/deploy-via-git:
+  #         force: true # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
+
+workflows:
+  test_my_app:
+    jobs:
+      - build_and_test
+      - deploy:
+          requires:
+            - build_and_test # only deploy if the build_and_test job has completed
+          filters:
+            branches:
+              only: main # only deploy when on main
