@@ -44,7 +44,6 @@ workflows:
   test_my_app:
     jobs:
       - build_and_test
-        context: sonarcloud
       - coverage_report:
           requires:
             - build_and_test
