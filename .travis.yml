@@ -5,6 +5,7 @@ python:
 before_install:
   - sudo apt-get update
   - sudo apt-get install libssl-dev openssl
+  - sudo mv /usr/lib/python3.9/ssl.py /usr/lib/python3.9/ssl.bak
   - python -m venv myenv
   - source myenv/bin/activate
 
