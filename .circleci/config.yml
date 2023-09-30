@@ -11,11 +11,24 @@ jobs:
           pkg-manager: poetry
       - run:
           name: Run tests
-          command: poetry run pytest test
+          command: poetry run pytest --cov=app test/
       - persist_to_workspace:
           root: ~/project
           paths:
             - .
+    
+  coverage_report:
+    executor: python/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Generate coverage report
+          command: |
+            poetry run coverage xml
+      - store_artifacts:
+          path: ~/project/coverage.xml
+          destination: coverage/xml
 
   # deploy: # this can be any name you choose
   #   executor: python/default
