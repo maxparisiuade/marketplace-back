@@ -11,7 +11,7 @@ fastapi = "^0.103.1"
 uvicorn = "^0.15.0"
 pytest = "^6.2.5"
 requests = "^2.26.0"
-httpx = "^0.25.0"
+httpx = { version = "^0.25.0", dependencies = ["urllib3==1.26.6"] }
 
 [build-system]
 requires = ["poetry-core"]
