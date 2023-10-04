@@ -1,0 +1,55 @@
+version: 2.1
+orbs:
+  python: circleci/python@2.1.1
+  sonarcloud: sonarsource/sonarcloud@2.0.0
+
+jobs:
+  build_and_test: # this can be any name you choose
+    executor: python/default
+    steps:
+      - checkout
+      - sonarcloud/scan
+      - python/install-packages:
+          pkg-manager: poetry
+      - run:
+          name: Run tests
+          command: |
+            mkdir test-results
+            poetry run pytest --cov=app --cov-report=xml --junitxml=test-results/junit.xml test/
+      - store_test_results:
+          path: test-results
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+    
+  coverage_report:
+    executor: python/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - store_artifacts:
+          path: ~/project/coverage.xml
+          destination: coverage/xml
+
+  # deploy: # this can be any name you choose
+  #   executor: python/default
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/project
+  #     - heroku/deploy-via-git:
+  #         force: true # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
+
+workflows:
+  test_my_app:
+    jobs:
+      - build_and_test
+      - coverage_report:
+          requires:
+            - build_and_test
+      # - deploy:
+      #     requires:
+      #       - build_and_test # only deploy if the build_and_test job has completed
+      #     filters:
+      #       branches:
+      #         only: main # only deploy when on main
