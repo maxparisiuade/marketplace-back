@@ -1,5 +1,8 @@
 install:
 	poetry install
+
+update:
+	poetry update
 	
 serve:
 	poetry run uvicorn main:app --host 0.0.0.0 --port 5000 --reload
@@ -13,5 +16,6 @@ zip:
 
 .PHONY: \
 	install \
+	update \
 	serve \
 	zip
