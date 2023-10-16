@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from decimal import Decimal
 from enum import Enum
 from typing import List
+from ..utils.utils import generate_short_unique_id
 
 class Rubro(str, Enum):
     MODA_ROPA = "Moda y ropa"
@@ -77,7 +78,7 @@ def get_subcategorias_de_rubro(rubro: Rubro) -> List[Categoria]:
     return rubro_subcategorias.get(rubro, [])
 
 class Producto(BaseModel):
-    uId: str
+    uId: str = generate_short_unique_id()
     titulo: str
     marca: str
     precio: Decimal

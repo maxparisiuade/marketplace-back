@@ -24,8 +24,7 @@ class DatabaseService():
                     'uId': key
                 }
             )
-            print(response)
-            return response
+            return response.get('Item', None)
         except ClientError as e:
             print(f"Error getting item from DynamoDB: {e}")
             return None
@@ -45,9 +44,10 @@ class DatabaseService():
             
             if existing_item:
                 updated_item = existing_item.copy()
-                for key, value in new_item.dict().items():
+                for key, value in new_item.items():
                     updated_item[key] = value
 
+                print(updated_item)
                 response = self.table.put_item(
                     Item=updated_item
                 )
